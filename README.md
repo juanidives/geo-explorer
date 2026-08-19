@@ -180,15 +180,19 @@ Emite um certificado fictício em Markdown. O ID do certificado é determinísti
 O comando aceita **duas formas** de passagem de argumentos:
 
 ```bash
-# Forma recomendada — flags explícitas, suporta valores com espaços
+# Forma recomendada — flags explícitas; cada flag coleta todos os tokens
+# até a flag seguinte, então valores com espaços funcionam normalmente
 npm run certificado -- --nome "Maria Silva" --tech "TypeScript"
 npm run certificado -- --nome "Ana Lima" --tech "Data Science"
 
-# Forma posicional — compatível, mas limitada a valores sem espaços
-npm run certificado -- "Maria" "TypeScript"
+# Forma posicional — o primeiro argumento vira nome e o segundo vira tecnologia;
+# aspas fazem o shell entregar cada valor como um único elemento de argv,
+# então espaços dentro de cada valor funcionam normalmente
+npm run certificado -- "Ana Lima" "TypeScript"
+npm run certificado -- "Ana" "Data Science"
 ```
 
-> Use as flags `--nome` e `--tech` sempre que o nome ou a tecnologia contiverem espaços.
+> Na forma posicional o parser espera exatamente dois argumentos (`argv[0]` → nome, `argv[1]` → tecnologia). Use as flags `--nome` e `--tech` se preferir uma sintaxe mais explícita ou se quiser evitar depender das aspas do shell.
 
 **Saída (em Markdown):**
 

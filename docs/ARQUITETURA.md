@@ -55,7 +55,7 @@ Importar `trilhas_dio.json` diretamente em cada arquivo que precisasse dele, rep
 
 Todos os consumidores — CLI, MCP e testes — importam desse único módulo. Qualquer mudança na estrutura do JSON ou na estratégia de busca tem um só ponto de edição.
 
-**Comportamento documentado:** `findTrilha("")` retorna o primeiro elemento porque `"".includes("")` é sempre `true`. Isso está registrado como comportamento esperado nos testes em vez de ser tratado como bug — a camada CLI valida antes de chegar aqui.
+**Entrada em branco:** `findTrilha` rejeita explicitamente strings vazias ou compostas só de espaços, retornando `undefined` antes de executar o `Array.find`. Sem essa guarda, `"".includes("")` é sempre `true` e qualquer string vazia retornaria a primeira trilha do array — comportamento silencioso que afeta não só a CLI (que valida `process.argv` antes) mas também o servidor MCP, cujo schema Zod aceita `z.string().min(1)` mas não impede que um cliente envie só espaços em branco.
 
 ---
 
@@ -220,5 +220,5 @@ Cada trilha tem o seguinte esquema:
 **Decisões de modelagem relevantes:**
 
 - **`tecnologia` como chave de busca** — `findTrilha` busca por substring sobre esse campo. Isso permite que o usuário digite `"java"` e encontre `"Java"`, ou `"node"` e encontre `"Node.js"`. Trilhas cujo nome de tecnologia é composto (ex: `"Python / ML"`, `"Java / Spring"`) são encontradas tanto por `"python"` quanto por `"ml"` ou `"spring"`.
-- **`numero_de_modulos` redundante** — poderia ser calculado como `modulos.length`, mas é mantido explicitamente para que a exibição no certificado não dependa de contar o array na hora da renderização.
+- **`numero_de_modulos` redundante** — o campo existe porque estava no formato original dos dados e foi preservado para não quebrar compatibilidade com esse esquema. Na prática, `modulos.length` é a fonte confiável: nunca fica fora de sincronia com o array real. O código de exibição usa `trilha.numero_de_modulos` por consistência com o JSON, mas qualquer novo código deve preferir `trilha.modulos.length`.
 - **`id` numérico** — usado exclusivamente por `generateCertId` para produzir um identificador de certificado determinístico sem precisar de UUID ou dependência externa.

@@ -26,11 +26,12 @@ describe("findTrilha", () => {
     expect(findTrilha("TecnologiaQueNaoExiste123")).toBeUndefined();
   });
 
-  it("retorna undefined para string vazia — na prática retorna o primeiro item (substring vazia casa em tudo)", () => {
-    // Empty string matches everything via includes(''), so it returns the first element
-    // This is the actual behaviour — document it rather than fight it
-    const result = findTrilha("");
-    expect(result).toBeDefined(); // any first hit is fine
+  it("retorna undefined para string vazia", () => {
+    expect(findTrilha("")).toBeUndefined();
+  });
+
+  it("retorna undefined para string só com espaços em branco", () => {
+    expect(findTrilha("   ")).toBeUndefined();
   });
 });
 

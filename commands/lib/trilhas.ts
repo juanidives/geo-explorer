@@ -18,10 +18,11 @@ const trilhas: Trilha[] = (trilhasData as { trilhas: Trilha[] }).trilhas;
 
 /**
  * Finds a trilha by technology name (case-insensitive, partial match).
- * Returns undefined when nothing is found.
+ * Returns undefined when nothing is found or when the input is blank.
  */
 export function findTrilha(tecnologia: string): Trilha | undefined {
-  const needle = tecnologia.toLowerCase();
+  const needle = tecnologia.trim().toLowerCase();
+  if (!needle) return undefined;
   return trilhas.find((t) => t.tecnologia.toLowerCase().includes(needle));
 }
 
