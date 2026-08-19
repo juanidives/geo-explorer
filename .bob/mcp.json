@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "geo-explorer": {
+      "command": "node",
+      "args": ["C:/Workspace/dio/geo-explorer/mcp/build/mcp/src/index.js"]
+    }
+  }
+}

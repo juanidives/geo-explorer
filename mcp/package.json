@@ -1,0 +1,24 @@
+{
+  "name": "geo-explorer-mcp",
+  "version": "0.1.0",
+  "description": "MCP server exposing Geo-Explorer tools",
+  "type": "commonjs",
+  "main": "build/index.js",
+  "bin": {
+    "geo-explorer-mcp": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts"
+  },
+  "files": ["build"],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.15.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.23.12",
+    "typescript": "^5.8.3"
+  }
+}
