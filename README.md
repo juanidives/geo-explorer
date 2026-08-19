@@ -347,6 +347,38 @@ O transporte usado é **stdio** — o servidor é iniciado como processo filho p
 
 ## Melhorias realizadas
 
+### Correções encontradas em teste manual
+
+Ao validar os comandos além do caminho feliz, apareceram dois defeitos que os testes iniciais não pegavam:
+
+- O `/certificado` travava quando a tecnologia tinha espaço no nome (`"Data Science"`). O parsing dependia da posição dos argumentos e não distinguia onde terminava o nome. Corrigido com flags explícitas `--nome` e `--tech`, mantendo o modo posicional como fallback.
+- O `/trilha` exibia `"Módulo 1, Módulo 2..."` em vez dos nomes reais. O código gerava os rótulos a partir do campo `numero_de_modulos` e ignorava o array `modulos` do JSON — o dado estava correto, quem o consumia é que não lia.
+- O `findTrilha` retornava a primeira trilha do catálogo para entrada vazia, porque `"".includes("")` é sempre verdadeiro. A validação existia na CLI, mas não no servidor MCP, onde o schema Zod aceita string de espaços. Corrigido na origem.
+
+### Cobertura medida em vez de estimada
+
+A meta era 70% de cobertura. Em vez de afirmar um número, configurei o provider `v8` do Vitest para medir de fato, com relatório gravado em arquivo e script `npm` reproduzível. Os entrypoints CLI foram excluídos do cálculo com justificativa explícita, e as branches descobertas que sobraram receberam teste. Resultado: 100% sobre a lógica testável, 59 testes.
+
+### Separação entre lógica pura e I/O
+
+Cada comando foi refatorado em duas camadas: funções puras exportadas e uma função `run()` isolada pelo guard `require.main === module`. Isso tornou o código testável sem mock de `process.argv`, e permitiu que o servidor MCP importasse a mesma lógica sem duplicação.
+
+### Configuração local fora do versionamento
+
+O `.bob/mcp.json` exige caminho absoluto da máquina. Em vez de versionar um caminho que só funciona no meu computador, versionei `.bob/mcp.example.json` com placeholder e ignorei o arquivo real — mesmo padrão do `.env.example`.
+
+### Revisão da documentação gerada
+
+A documentação produzida pelo agente foi revisada linha a linha e continha imprecisões: contagem errada de trilhas (15 em vez de 35), descrição do parser que não correspondia ao código, e uma justificativa de modelagem que racionalizava um campo redundante em vez de admitir o trade-off. Todas foram corrigidas contra o código.
+
 ---
 
 ## O que aprendi
+
+- **Agente gera rápido, mas não verifica.** O ciclo que funcionou foi sempre o mesmo: pedir, ler o que saiu, testar o caminho de erro, corrigir. Os três bugs deste projeto apareceram em teste manual, nunca no que o agente relatou como pronto. Ele descreveu o próprio parser de forma incorreta duas vezes — descrevia a intenção, não o código.
+
+- **Número afirmado não é número medido.** O projeto de referência declarava 100% de cobertura sem ter nenhuma ferramenta de cobertura instalada. É a diferença entre dizer e demonstrar, e ela só aparece se alguém procurar.
+
+- **Segurança por padrão costuma ser a opção mais fraca.** A instrução original mandava usar `credential.helper store`, que grava o token em texto puro no disco. Troquei pelo Git Credential Manager, que cumpre o mesmo requisito com armazenamento criptografado. O token do GitHub ficou em variável de ambiente de usuário, nunca em arquivo do projeto — decisão que também atende à orientação do desafio de não enviar credenciais ao repositório.
+
+- **Documentar decisão é diferente de documentar código.** O `ARQUITETURA.md` só ficou útil quando cada seção passou a registrar o problema, a alternativa descartada e o motivo da escolha. Descrever o que o código faz é redundante — o código já está lá.
