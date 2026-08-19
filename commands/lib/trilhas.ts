@@ -6,6 +6,7 @@ export interface Trilha {
   tecnologia: string;
   nivel: string;
   numero_de_modulos: number;
+  modulos: string[];
   xp_total: number;
   badges_disponiveis: string[];
   promocoes: boolean;

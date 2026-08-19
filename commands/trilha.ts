@@ -33,10 +33,9 @@ function run(): void {
     process.exit(1);
   }
 
-  const modulos = Array.from(
-    { length: trilha.numero_de_modulos },
-    (_, i) => `  ${i + 1}. Módulo ${i + 1}`
-  ).join("\n");
+  const modulos = trilha.modulos
+    .map((nome, i) => `  ${i + 1}. ${nome}`)
+    .join("\n");
 
   const promocao = trilha.promocoes ? "✅ Disponível" : "❌ Não disponível";
   const acesso = trilha.vitalicio ? "Vitalício" : "Por período";
