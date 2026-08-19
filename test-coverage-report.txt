@@ -1,0 +1,36 @@
+﻿
+> geo-explorer@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.11 C:/Workspace/dio/geo-explorer
+      Coverage enabled with v8
+
+ Ô£ô tests/trilha.test.ts (14 tests) 19ms
+ Ô£ô tests/certificado.test.ts (24 tests) 30ms
+ Ô£ô tests/desafio.test.ts (20 tests) 7ms
+
+ Test Files  3 passed (3)
+      Tests  58 passed (58)
+   Start at  15:25:42
+   Duration  1.71s (transform 126ms, setup 0ms, import 198ms, tests 55ms, environment 0ms)
+
+ % Coverage report from v8
+-----------------|---------|----------|---------|---------|-------------------
+File             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------|---------|----------|---------|---------|-------------------
+All files        |     100 |      100 |     100 |     100 |                   
+ commands        |     100 |      100 |     100 |     100 |                   
+  certificado.ts |     100 |      100 |     100 |     100 |                   
+  desafio.ts     |     100 |      100 |     100 |     100 |                   
+  trilha.ts      |     100 |      100 |     100 |     100 |                   
+ commands/lib    |     100 |      100 |     100 |     100 |                   
+  trilhas.ts     |     100 |      100 |     100 |     100 |                   
+-----------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 100% ( 49/49 )
+Branches     : 100% ( 28/28 )
+Functions    : 100% ( 14/14 )
+Lines        : 100% ( 43/43 )
+================================================================================

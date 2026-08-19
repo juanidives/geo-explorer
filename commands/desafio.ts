@@ -18,12 +18,12 @@
 
 import { findTrilha } from "./lib/trilhas";
 
-type Nivel = "Básico" | "Intermediário" | "Avançado";
+export type Nivel = "Básico" | "Intermediário" | "Avançado";
 
-const NIVEIS: Nivel[] = ["Básico", "Intermediário", "Avançado"];
+export const NIVEIS: Nivel[] = ["Básico", "Intermediário", "Avançado"];
 
 /** Challenges keyed by normalised level. */
-const DESAFIOS: Record<Nivel, string[]> = {
+export const DESAFIOS: Record<Nivel, string[]> = {
   Básico: [
     "Implemente uma função que recebe um array de números e retorna a soma de todos os elementos.",
     "Crie uma função que verifica se uma string é um palíndromo.",
@@ -50,7 +50,7 @@ const DESAFIOS: Record<Nivel, string[]> = {
   ],
 };
 
-function normaliseNivel(input: string): Nivel | null {
+export function normaliseNivel(input: string): Nivel | null {
   const normalised = input.toLowerCase().trim();
   if (["basico", "básico"].includes(normalised)) return "Básico";
   if (["intermediario", "intermediário"].includes(normalised))
@@ -59,10 +59,35 @@ function normaliseNivel(input: string): Nivel | null {
   return null;
 }
 
-function pickRandom<T>(arr: T[]): T {
+export function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+export function buildOutput(nivel: Nivel, trilha: import("./lib/trilhas").Trilha, desafio: string): string {
+  return `
+╔══════════════════════════════════════════════════════╗
+  ⚔️   DESAFIO DE CÓDIGO — ${trilha.tecnologia.toUpperCase()}
+╚══════════════════════════════════════════════════════╝
+
+  Nível      : ${nivel}
+  Trilha base: ${trilha.nome}
+
+── ENUNCIADO ────────────────────────────────────────
+
+  ${desafio}
+
+── CRITÉRIOS DE AVALIAÇÃO ───────────────────────────
+
+  ✔  Código legível e bem estruturado
+  ✔  Tratamento de casos extremos (edge cases)
+  ✔  Complexidade de tempo e espaço adequada ao nível
+  ✔  Testes mínimos demonstrando o funcionamento
+
+  Boa sorte! 💪
+`.trim();
+}
+
+/* istanbul ignore next */
 function run(): void {
   const args = process.argv.slice(2);
 
@@ -111,30 +136,8 @@ function run(): void {
   }
 
   const desafio = pickRandom(DESAFIOS[nivel]);
-
-  const output = `
-╔══════════════════════════════════════════════════════╗
-  ⚔️   DESAFIO DE CÓDIGO — ${trilha.tecnologia.toUpperCase()}
-╚══════════════════════════════════════════════════════╝
-
-  Nível      : ${nivel}
-  Trilha base: ${trilha.nome}
-
-── ENUNCIADO ────────────────────────────────────────
-
-  ${desafio}
-
-── CRITÉRIOS DE AVALIAÇÃO ───────────────────────────
-
-  ✔  Código legível e bem estruturado
-  ✔  Tratamento de casos extremos (edge cases)
-  ✔  Complexidade de tempo e espaço adequada ao nível
-  ✔  Testes mínimos demonstrando o funcionamento
-
-  Boa sorte! 💪
-`.trim();
-
-  console.log(output);
+  console.log(buildOutput(nivel, trilha, desafio));
 }
 
-run();
+/* istanbul ignore next */
+if (require.main === module) run();

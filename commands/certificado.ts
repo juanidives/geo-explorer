@@ -20,6 +20,7 @@ import { findTrilha } from "./lib/trilhas";
 // Fail-safe: exit with an error message if the process hangs for more than 5 s.
 // Under normal execution the synchronous path finishes well within 1 s.
 const TIMEOUT_MS = 5_000;
+/* istanbul ignore next */
 const hangGuard = setTimeout(() => {
   console.error("Erro: o comando demorou demais e foi encerrado automaticamente.");
   process.exit(2);
@@ -27,7 +28,7 @@ const hangGuard = setTimeout(() => {
 // Allow Node to exit normally when the work finishes before the timeout fires.
 hangGuard.unref();
 
-function formatDate(date: Date): string {
+export function formatDate(date: Date): string {
   return date.toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "long",
@@ -36,7 +37,7 @@ function formatDate(date: Date): string {
 }
 
 /** Generates a deterministic-looking certificate ID from name + trail id. */
-function generateCertId(nome: string, trilhaId: number): string {
+export function generateCertId(nome: string, trilhaId: number): string {
   let hash = trilhaId * 31;
   for (let i = 0; i < nome.length; i++) {
     hash = (hash * 31 + nome.charCodeAt(i)) >>> 0;
@@ -55,7 +56,7 @@ function generateCertId(nome: string, trilhaId: number): string {
  * Falls back to positional args[0] / args[1] when no flags are present,
  * preserving backwards compatibility for single-word values.
  */
-function parseArgs(argv: string[]): { nome: string; tecnologia: string } | null {
+export function parseArgs(argv: string[]): { nome: string; tecnologia: string } | null {
   const nomeIdx = argv.indexOf("--nome");
   const techIdx = argv.indexOf("--tech");
 
@@ -85,41 +86,12 @@ function parseArgs(argv: string[]): { nome: string; tecnologia: string } | null 
   return null;
 }
 
-function run(): void {
-  const argv = process.argv.slice(2);
-  const parsed = parseArgs(argv);
-
-  if (!parsed) {
-    console.error(
-      "Erro: informe o nome e a tecnologia.\n" +
-        "Uso: /certificado --nome \"<nome>\" --tech \"<tecnologia>\"\n" +
-        'Exemplo: npm run certificado -- --nome "Ana" --tech "Data Science"'
-    );
-    process.exit(1);
-  }
-
-  const { nome, tecnologia } = parsed;
-
-  if (!nome) {
-    console.error("Erro: o nome não pode ser vazio.");
-    process.exit(1);
-  }
-
-  const trilha = findTrilha(tecnologia);
-
-  if (!trilha) {
-    console.error(
-      `Erro: nenhuma trilha encontrada para "${tecnologia}".\n` +
-        `Verifique o nome e tente novamente.`
-    );
-    process.exit(1);
-  }
-
+export function buildCertificate(nome: string, trilha: import("./lib/trilhas").Trilha): string {
   const emitidoEm = formatDate(new Date());
   const certId = generateCertId(nome, trilha.id);
   const badges = trilha.badges_disponiveis.map((b) => `- 🏅 ${b}`).join("\n");
 
-  const certificado = `
+  return `
 # 🎓 CERTIFICADO DE CONCLUSÃO
 
 ---
@@ -160,8 +132,41 @@ ${badges}
 **Digital Innovation One**
 _Transformando talentos em protagonistas_
 `.trim();
-
-  console.log(certificado);
 }
 
-run();
+/* istanbul ignore next */
+function run(): void {
+  const argv = process.argv.slice(2);
+  const parsed = parseArgs(argv);
+
+  if (!parsed) {
+    console.error(
+      "Erro: informe o nome e a tecnologia.\n" +
+        "Uso: /certificado --nome \"<nome>\" --tech \"<tecnologia>\"\n" +
+        'Exemplo: npm run certificado -- --nome "Ana" --tech "Data Science"'
+    );
+    process.exit(1);
+  }
+
+  const { nome, tecnologia } = parsed;
+
+  if (!nome) {
+    console.error("Erro: o nome não pode ser vazio.");
+    process.exit(1);
+  }
+
+  const trilha = findTrilha(tecnologia);
+
+  if (!trilha) {
+    console.error(
+      `Erro: nenhuma trilha encontrada para "${tecnologia}".\n` +
+        `Verifique o nome e tente novamente.`
+    );
+    process.exit(1);
+  }
+
+  console.log(buildCertificate(nome, trilha));
+}
+
+/* istanbul ignore next */
+if (require.main === module) run();

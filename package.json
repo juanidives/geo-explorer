@@ -7,7 +7,9 @@
     "build": "tsc --noEmit",
     "trilha": "tsx commands/trilha.ts",
     "desafio": "tsx commands/desafio.ts",
-    "certificado": "tsx commands/certificado.ts"
+    "certificado": "tsx commands/certificado.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [],
   "author": "",
@@ -15,8 +17,10 @@
   "type": "commonjs",
   "devDependencies": {
     "@types/node": "^26.2.0",
+    "@vitest/coverage-v8": "^4.1.11",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.12",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
   }
 }
