@@ -11,6 +11,7 @@
     "build": "tsc",
     "dev": "tsx src/index.ts"
   },
+  "license": "MIT",
   "files": ["build"],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.0",
