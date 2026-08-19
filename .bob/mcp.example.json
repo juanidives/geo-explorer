@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "geo-explorer": {
+      "command": "node",
+      "args": ["<CAMINHO_ABSOLUTO_DO_PROJETO>/mcp/build/mcp/src/index.js"]
+    }
+  }
+}

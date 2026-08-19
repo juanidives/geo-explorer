@@ -10,3 +10,4 @@ docs/certificados-emitidos/
 npm-debug.log*
 .DS_Store
 Thumbs.db
+.bob/mcp.json

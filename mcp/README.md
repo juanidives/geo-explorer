@@ -55,20 +55,26 @@ mcp/build/mcp/src/index.js
 
 ## Registering in Bob
 
-Add the server to your Bob workspace MCP config (`.bob/mcp.json` inside the project folder, or the global config):
+A template config is provided at [`.bob/mcp.example.json`](../.bob/mcp.example.json). Copy it to `.bob/mcp.json` (which is git-ignored) and replace the placeholder with the absolute path to this project on your machine:
+
+```bash
+cp .bob/mcp.example.json .bob/mcp.json
+```
+
+Then edit `.bob/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "geo-explorer": {
       "command": "node",
-      "args": ["C:/Workspace/dio/geo-explorer/mcp/build/mcp/src/index.js"]
+      "args": ["/absolute/path/to/geo-explorer/mcp/build/mcp/src/index.js"]
     }
   }
 }
 ```
 
-> **Tip:** use an absolute path to `index.js`. Relative paths can break depending on where Bob spawns the process.
+> **Tip:** always use an absolute path to `index.js`. Relative paths can break depending on where Bob spawns the process.
 
 Bob hot-reloads MCP servers when the config is saved. After adding the entry you should see **geo-explorer** listed as a connected server in the Bob MCP panel.
 
@@ -83,7 +89,7 @@ Open `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
   "mcpServers": {
     "geo-explorer": {
       "command": "node",
-      "args": ["C:/Workspace/dio/geo-explorer/mcp/build/mcp/src/index.js"]
+      "args": ["/absolute/path/to/geo-explorer/mcp/build/mcp/src/index.js"]
     }
   }
 }
@@ -114,6 +120,10 @@ mcp/
 ├── package.json
 ├── tsconfig.json
 └── README.md
+
+.bob/
+├── mcp.example.json    # Template — committed to git
+└── mcp.json            # Your local config — git-ignored
 ```
 
 All business logic is imported directly from `../commands/` — no code is duplicated.
