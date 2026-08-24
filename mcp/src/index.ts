@@ -46,6 +46,7 @@ const registerTool = (server.tool as any).bind(server) as (
   name: string,
   description: string,
   schema: Record<string, z.ZodTypeAny>,
+  annotations: { readOnlyHint?: boolean; destructiveHint?: boolean; idempotentHint?: boolean },
   handler: (args: Record<string, unknown>) => Promise<{ content: { type: "text"; text: string }[]; isError?: boolean }>
 ) => void;
 
@@ -53,6 +54,7 @@ const registerTool = (server.tool as any).bind(server) as (
 server.tool(
   "listar_tecnologias",
   "Lista todas as tecnologias disponíveis no Geo-Explorer com seu nível e XP total.",
+  { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
   async () => {
     const lines = trilhas.map(
       (t) =>
@@ -74,6 +76,7 @@ registerTool(
       .min(1)
       .describe("Nome (ou parte do nome) da tecnologia. Ex: 'javascript', 'python'."),
   },
+  { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
   async ({ tecnologia }) => {
     const trilha = findTrilha(String(tecnologia));
     if (!trilha) {
@@ -107,6 +110,7 @@ registerTool(
       .optional()
       .describe("Nível de dificuldade: Básico | Intermediário | Avançado (com ou sem acento)."),
   },
+  { readOnlyHint: true, destructiveHint: false, idempotentHint: false },
   async ({ tecnologia, nivel }) => {
     const trilha = findTrilha(String(tecnologia));
     if (!trilha) {
@@ -154,6 +158,7 @@ registerTool(
       .min(1)
       .describe("Tecnologia da trilha concluída. Ex: 'TypeScript'."),
   },
+  { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
   async ({ nome, tecnologia }) => {
     const trilha = findTrilha(String(tecnologia));
     if (!trilha) {
